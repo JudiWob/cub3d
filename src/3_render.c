@@ -1,83 +1,61 @@
 #include "../includes/header.h"
 
-
+int	render_map(t_struct *game);
+void draw_image(t_struct *game, void *texture, int draw_start_h, int draw_start_w );
+void draw_to_buffer(t_struct *game, void *texture, int draw_start_h, int draw_start_w );
+void load_images(t_struct *game);
 
 int	render_map(t_struct *game)
 {
-	
-    // int y;
-    // int x;
+	int y;
+    int x;
 
-    // y = -1;
-    // while (++y < game->lines  * TILESIZE)
-    // {
-    //     x = -1;
-    //     while (++x < game->columns * TILESIZE)
-    //     {
-    //         mlx_pixel_put(game->mlx, game->win, x, y, 0xFFFFFF);
-
-    //     }
-    // }
-
-    
-    
-    // int	y;
-	// int	x;
-
-	// y = -1;
-	// while (++y < game->lines  * TILESIZE)
-	// {
-	// 	x = -1;
-	// 	while (++x < game->columns * TILESIZE)
-	// 	{
-	// 		choose_color(x, y, game);
-	// 	}
-	// }
-  int tex_width;
-    int tex_height = 0;
-    int bpp;
-    int line_len;
-    int endian;
-
-    void *tex = mlx_xpm_file_to_image(game->mlx, "texture/player.xpm", &tex_width, &tex_height);
-    if (!tex)
-        exit_printf(game, "Failed to load floor image", 2);
-    char *addr = mlx_get_data_addr(tex, &bpp, &line_len, &endian); //addr[0 ... tex_height * line_len - 1]
-    //printf("BPP: %i, LineLen: %i\n", bpp, line_len);
-    int pix_y = 0; //row of the pixel in texture
-    int pix_x = 5; //column of the pixel in texture
-    int h = -1; //row in window
-    int w = 63; //column in window
-    while (++h < game->lines * TILESIZE )
+    y = 0;
+    x = 0;
+    printf("MAP SIZE: lines=%d, columns=%d\n", game->lines, game->columns);
+    while(y < game->lines)
     {
-        w = 63;
-        while (++w < 63 + 64)
+        x = 0;
+
+        while(x < game->columns)
         {
-            pix_y = (int)((float)h / (game->lines * TILESIZE) * tex_height);
-            pix_x = (int)((float)(w - 63) / 64 * tex_width);
-            mlx_pixel_put(game->mlx, game->win, w, h, *(int *)(addr + (pix_y * line_len + pix_x * (bpp / 8))));
+            if(game->map[y][x] == '1')
+                draw_to_buffer(game, game->wall, y * TILESIZE, x * TILESIZE);
+            if(game->map[y][x] == '0')
+                draw_to_buffer(game, game->floor, y * TILESIZE, x * TILESIZE);
+            x++;
         }
+        y++;
     }
+    mlx_put_image_to_window(game->mlx, game->win, game->buff_img, 0, 0);
 	return (0);
 }
 
-void	choose_color(int x, int y, t_struct *game)
+void draw_to_buffer(t_struct *game, void *texture, int draw_start_h, int draw_start_w )
 {
-	mlx_pixel_put(game->mlx, game->win, x, y, 0xFFFFFF);
+    int tex_bpp;
+    int line_len;
+    int endian;
+    char *tex_addr;
+    int pix_y;//y-coordinaete of pixel in texture that will be drawn to window
+    int pix_x; //x-coordinate of the pixel in texture that will be drawn to window
+    int h;
+    int w;
+    int color;
+    
+    tex_addr = mlx_get_data_addr(texture, &tex_bpp, &line_len, &endian);
+    h = draw_start_h;
+    while (h < draw_start_h + TILESIZE)
+    {
+        w = draw_start_w;
+        while (w < draw_start_w + TILESIZE)
+        {
+            pix_y = (int)((float)(h - draw_start_h) / TILESIZE * 128);
+            pix_x = (int)((float)(w - draw_start_w) / TILESIZE * 128);
+            color = *(int *)(tex_addr + (pix_y * line_len + pix_x * (tex_bpp / 8)));
+            *(int *)(game->buff_addr + (h * game->line_len + w * (game->bpp / 8))) = color;
+            w++;
+        }
+        h++;
+    }
 }
-
-	// if (game->map[y][x] == '1')
-	// 	mlx_put_image_to_window(game->mlx, game->win, game->img_wall, x
-	// 		* TILESIZE, y * TILESIZE);
-	// else if (game->map[y][x] == 'C')
-	// 	mlx_put_image_to_window(game->mlx, game->win, game->img_collectible, x
-	// 		* TILESIZE, y * TILESIZE);
-	// else if (game->map[y][x] == 'P')
-	// 	mlx_put_image_to_window(game->mlx, game->win, game->img_player, x
-	// 		* TILESIZE, y * TILESIZE);
-	// else if (game->map[y][x] == 'E')
-	// 	mlx_put_image_to_window(game->mlx, game->win, game->img_exit, x
-	// 		* TILESIZE, y * TILESIZE);
-	// else if (game->map[y][x] == 'S')
-	// 	mlx_put_image_to_window(game->mlx, game->win, game->img_exit_player, x
-	// 		* TILESIZE, y * TILESIZE);

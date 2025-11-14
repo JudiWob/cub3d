@@ -4,7 +4,7 @@
 NAME        = cub3d
 CC          = gcc
 # Add GL_SILENCE_DEPRECATION to suppress OpenGL deprecation warnings on macOS
-CFLAGS		= -Wall -Wextra -Werror -Iincludes
+CFLAGS		= -Wall -Wextra -Werror -g -Iincludes
 
 SRC_DIR     = src
 OBJ_DIR     = src/obj

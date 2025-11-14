@@ -18,7 +18,6 @@ void	init_struct(t_struct **game)
     (*game)->fd = -1;
 	(*game)->lines = 0;
 	(*game)->columns= 0;
-	printf("hi\n");
 }
 
 void	check_argv(int argc, char **argv, t_struct *game)

@@ -34,7 +34,7 @@ void	is_rectangle(t_struct *game)
 		i++;
 	}
 	game->columns = width;
-    //printf("columns=%d, l", game->columns);
+    printf("After reading map: columns=%d\n", game->columns);
 }
 
 void	trim_newlines(t_struct *game)

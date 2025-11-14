@@ -6,7 +6,7 @@
 #include "../libft/libft.h"
 
 // Linux:
-// #define TILESIZE 128
+// #define TILESIZE 32
 // #define KEY_W 119
 // #define KEY_S 115
 // #define KEY_A 97
@@ -15,7 +15,7 @@
 
 
 //MAC:
-#define TILESIZE 128
+#define TILESIZE 32
 #define KEY_W 13
 #define KEY_S 1
 #define KEY_A 0
@@ -31,6 +31,13 @@ typedef struct s_game
     void    *mlx;
     void    *win;
     void    *tex;
+    void    *wall;
+    void    *floor;
+    void    *buff_img;  // the off-screen image
+    char    *buff_addr;
+    int     bpp;
+    int     line_len;
+    int     endian;
     int     lines;
 	int     columns;
 
@@ -59,7 +66,7 @@ void	copy_map(t_struct *game);
 
 //open_window
 void	open_window(t_struct *game);
-void	init_game(t_struct *game);
+void	init_mlx(t_struct *game);
 
 //render
 int	render_map(t_struct *game);
