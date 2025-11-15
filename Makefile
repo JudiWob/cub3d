@@ -3,27 +3,24 @@
 # **************************************************************************** #
 NAME        = cub3d
 CC          = gcc
-# Add GL_SILENCE_DEPRECATION to suppress OpenGL deprecation warnings on macOS
 CFLAGS		= -Wall -Wextra -Werror -g -Iincludes
 
 SRC_DIR     = src
 OBJ_DIR     = src/obj
 LIBFT_DIR   = libft
-MLX_DIR     = minilibx_opengl
+MLX_DIR     = minilibx_linux
 
 LIBFT       = $(LIBFT_DIR)/libft.a
 MLX         = $(MLX_DIR)/libmlx.a
 
 # **************************************************************************** #
-#                              MACOS LINKING FLAGS                             #
+#                              LINUX LINKING FLAGS                             #
 # **************************************************************************** #
-# The macOS native MLX uses the AppKit and OpenGL frameworks instead of X11 libraries.
-LDFLAGS_OSX = -framework OpenGL -framework AppKit
+LDFLAGS_LINUX = -lXext -lX11 -lm -lz -lGL
 
 # **************************************************************************** #
 #                                SOURCE FILES                                  #
 # **************************************************************************** #
-
 SRCS        = $(wildcard $(SRC_DIR)/*.c)
 OBJS        = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
@@ -34,8 +31,8 @@ OBJS        = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 all: $(NAME)
 
 $(NAME): $(OBJ_DIR) $(LIBFT) $(MLX) $(OBJS)
-	# Corrected linking command for macOS
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX) $(LDFLAGS_OSX) -o $(NAME)
+	# Linking command for Linux
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLX) $(LDFLAGS_LINUX) -o $(NAME)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -I$(LIBFT_DIR) -I$(MLX_DIR) -I$(SRC_DIR) -c $< -o $@

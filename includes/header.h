@@ -2,7 +2,7 @@
 #ifndef HEADER_H
 # define HEADER_H
 
-#include "../minilibx_opengl/mlx.h"
+#include "../minilibx_linux/mlx.h"
 #include "../libft/libft.h"
 
 // Linux:
@@ -15,7 +15,7 @@
 
 
 //MAC:
-#define TILESIZE 32
+#define TILESIZE 64
 #define KEY_W 13
 #define KEY_S 1
 #define KEY_A 0
