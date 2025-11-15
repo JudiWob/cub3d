@@ -21,7 +21,7 @@ int	render_map(t_struct *game)
         {
             if(game->map[y][x] == '1')
                 draw_to_buffer(game, game->wall, y * TILESIZE, x * TILESIZE);
-            if(game->map[y][x] == '0')
+            else
                 draw_to_buffer(game, game->floor, y * TILESIZE, x * TILESIZE);
             x++;
         }
